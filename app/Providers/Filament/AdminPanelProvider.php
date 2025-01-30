@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Providers;
+namespace App\Providers\Filament;
 
 use App\Filament\Auth\Login;
 use Awcodes\Curator\CuratorPlugin;
 use Awcodes\FilamentGravatar\GravatarPlugin;
 use Awcodes\FilamentGravatar\GravatarProvider;
 use BezhanSalleh\FilamentExceptions\FilamentExceptionsPlugin;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Croustibat\FilamentJobsMonitor\FilamentJobsMonitorPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -66,12 +67,13 @@ class AdminPanelProvider extends PanelProvider
                     ->disablePluginStyles(),
 
                 FilamentExceptionsPlugin::make(),
+                FilamentShieldPlugin::make(),
 
                 GravatarPlugin::make(),
             ])
             ->defaultAvatarProvider(GravatarProvider::class)
             ->favicon(asset('/favicon-32x32.png'))
-            ->brandLogo(fn () => view('components.logo'))
+            ->brandLogo(fn() => view('components.logo'))
             ->navigationGroups([
                 'Collections',
                 'Media',
@@ -106,3 +108,128 @@ class AdminPanelProvider extends PanelProvider
             ]);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
