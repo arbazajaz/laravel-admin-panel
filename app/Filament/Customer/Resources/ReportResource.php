@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Customer\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
@@ -10,11 +10,11 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\ReportResource\Pages;
 use Awcodes\Curator\Components\Forms\CuratorPicker;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Awcodes\Curator\Components\Tables\CuratorColumn;
-use App\Filament\Resources\ReportResource\RelationManagers;
+use App\Filament\Customer\Resources\ReportResource\Pages;
+use App\Filament\Customer\Resources\ReportResource\RelationManagers;
 
 class ReportResource extends Resource
 {
@@ -22,6 +22,14 @@ class ReportResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function query(Builder $query): Builder
+    {
+        if (auth()->user()->hasRole('customer')) {
+            return $query->where('user_id', auth()->id());
+        }
+
+        return $query;
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -46,6 +54,7 @@ class ReportResource extends Resource
                     ->default('pending'),
                 Forms\Components\Hidden::make('user_id')
                     ->default(fn() => auth()->id()),
+
             ]);
 
     }
@@ -88,6 +97,14 @@ class ReportResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
     }
 
     public static function getPages(): array
