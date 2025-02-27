@@ -7,9 +7,9 @@ use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use App\Filament\Auth\Login;
-use Filament\Pages\Auth\Register;
 use Awcodes\Curator\CuratorPlugin;
 use Filament\Support\Colors\Color;
+use Shanerbaner82\PanelRoles\PanelRoles;
 use Filament\Http\Middleware\Authenticate;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Awcodes\FilamentGravatar\GravatarPlugin;
@@ -38,13 +38,14 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(Login::class)
-            ->registration(Register::class)
-            // ->emailVerification()
-            // ->passwordReset()
             ->profile()
             ->spa()
             ->databaseNotifications()
             ->plugins([
+                PanelRoles::make()
+                    ->restrictedRoles(['super_admin']) // Only 'super_admin' can access
+                    ->roleToAssign('super_admin'), // Assigns 'super_admin' on registration
+
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,
@@ -69,7 +70,6 @@ class AdminPanelProvider extends PanelProvider
 
                 FilamentExceptionsPlugin::make(),
                 FilamentShieldPlugin::make(),
-
                 GravatarPlugin::make(),
             ])
             ->defaultAvatarProvider(GravatarProvider::class)
@@ -106,7 +106,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                RoleMiddleware::class . ':super_admin',
+                RoleMiddleware::class . ':super_admin', // Enforce 'super_admin' role
             ]);
     }
 }

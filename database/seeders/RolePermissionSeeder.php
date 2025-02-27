@@ -29,12 +29,12 @@ class RolePermissionSeeder extends Seeder
         // Create Roles
         $superAdmin = Role::firstOrCreate(['name' => 'super_admin']);
         $supervisor = Role::firstOrCreate(['name' => 'supervisor']);
-        $customer = Role::firstOrCreate(['name' => 'customer']);
+        $user = Role::firstOrCreate(['name' => 'user']);
 
         // Assign Permissions
         $superAdmin->givePermissionTo(Permission::all()); // Full access
         $supervisor->givePermissionTo(['view_assigned_reports', 'manage_reports']);
-        $customer->givePermissionTo(['create_own_report', 'edit_own_report']);
+        $user->givePermissionTo(['create_own_report', 'edit_own_report']);
 
         // Create Test Users (Optional)
         $this->createTestUsers();
@@ -56,10 +56,10 @@ class RolePermissionSeeder extends Seeder
                 'role' => 'supervisor',
             ],
             [
-                'name' => 'Customer',
-                'email' => 'customer@example.com',
+                'name' => 'user',
+                'email' => 'user@example.com',
                 'password' => bcrypt('password'),
-                'role' => 'customer',
+                'role' => 'user',
             ],
         ];
 

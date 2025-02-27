@@ -1,16 +1,17 @@
 <?php
 
-use BezhanSalleh\FilamentExceptions\FilamentExceptions;
 use Illuminate\Foundation\Application;
+use Spatie\Permission\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use BezhanSalleh\FilamentExceptions\FilamentExceptions;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withProviders([
         App\Providers\AppServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\SupervisorPanelProvider::class,
-        App\Providers\Filament\CustomerPanelProvider::class,
+        App\Providers\Filament\UserPanelProvider::class,
     ])
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -19,7 +20,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web([
-            App\Http\Middleware\AddSeoDefaults::class,
+            // App\Http\Middleware\AddSeoDefaults::class,
+        ]);
+
+        // Register Spatie Role & Permission middleware
+        $middleware->alias([
+            'role' => RoleMiddleware::class,
         ]);
 
         $middleware->redirectTo(fn () => Filament\Pages\Dashboard::getUrl());

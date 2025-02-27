@@ -6,9 +6,9 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
-use App\Filament\Auth\Login;
-use Filament\Pages\Auth\Register;
 use Filament\Support\Colors\Color;
+use Shanerbaner82\PanelRoles\PanelRoles;
+use App\Filament\User\Pages\Auth\Register;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -21,24 +21,24 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
-class CustomerPanelProvider extends PanelProvider
+class UserPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('customer')
-            ->path('customer')
-            ->login(Login::class)
-            ->registration(Register::class)
+            ->id('user')
+            ->path('user')
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Customer/Resources'), for: 'App\\Filament\\Customer\\Resources')
-            ->discoverPages(in: app_path('Filament/Customer/Pages'), for: 'App\\Filament\\Customer\\Pages')
+            ->login()
+            ->registration(Register::class)
+            ->discoverResources(in: app_path('Filament/User/Resources'), for: 'App\\Filament\\User\\Resources')
+            ->discoverPages(in: app_path('Filament/User/Pages'), for: 'App\\Filament\\User\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Customer/Widgets'), for: 'App\\Filament\\Customer\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/User/Widgets'), for: 'App\\Filament\\User\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
@@ -56,7 +56,12 @@ class CustomerPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                RoleMiddleware::class . ':customer',
+                RoleMiddleware::class . ':user', // Enforce 'user' role
+            ])
+            ->plugins([
+                PanelRoles::make()
+                    ->roleToAssign('user') // Assigns 'user' on registration
+                    ->restrictedRoles(['user']) // Only 'user' can access
             ]);
     }
 }

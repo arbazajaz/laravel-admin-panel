@@ -7,10 +7,11 @@ use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Shanerbaner82\PanelRoles\PanelRoles;
 use Filament\Http\Middleware\Authenticate;
+use Spatie\Permission\Middleware\RoleMiddleware;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
-use Spatie\Permission\Middleware\RoleMiddleware;
 use Filament\Http\Middleware\AuthenticateSession;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
@@ -29,6 +30,7 @@ class SupervisorPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->login()
             ->discoverResources(in: app_path('Filament/Supervisor/Resources'), for: 'App\\Filament\\Supervisor\\Resources')
             ->discoverPages(in: app_path('Filament/Supervisor/Pages'), for: 'App\\Filament\\Supervisor\\Pages')
             ->pages([
@@ -52,7 +54,12 @@ class SupervisorPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                RoleMiddleware::class . ':customer',
+                RoleMiddleware::class . ':supervisor', // Enforce 'supervisor' role
+            ])
+            ->plugins([
+                PanelRoles::make()
+                    ->roleToAssign('supervisor') // Changed to 'supervisor' for consistency
+                    ->restrictedRoles(['supervisor']) // Only 'supervisor' can access
             ]);
     }
 }

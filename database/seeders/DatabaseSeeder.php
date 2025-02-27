@@ -7,6 +7,7 @@ use App\Models\User;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Database\Seeders\RolePermissionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(RolePermissionSeeder::class);
         $user = User::factory()->create([
             'name' => 'admin',
             'email' => 'admin@admin.test',
